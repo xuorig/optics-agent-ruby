@@ -1,5 +1,1 @@
-class OpticsAgent
-  def self.hi
-    puts "Hello world!"
-  end
-end
+require 'optics-agent/rack-middleware'
