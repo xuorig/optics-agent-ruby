@@ -14,7 +14,9 @@ module OpticsAgent::Reporting
       uri = URI.parse(OPTICS_URL)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-      p http.request(req)
+      res = http.request(req)
+      p res
+      p res.body
     end
   end
 end
