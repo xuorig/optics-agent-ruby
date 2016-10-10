@@ -6,8 +6,8 @@ module OpticsAgent
 
       nanos = (Time.now - start) * 1000 * 1000
 
-      optics_report = query_context['optics-agent.report']
-      optics_report.report_field(parent_type.to_s, field_definition.name, nanos)
+      query = query_context[:optics_agent][:query]
+      query.report_field(parent_type.to_s, field_definition.name, nanos)
 
       result
     end

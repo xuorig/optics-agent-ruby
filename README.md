@@ -13,18 +13,38 @@ To your `Gemfile`
 
 ## Setup
 
+Create an agent
+
+```ruby
+# we expect one day there'll be some options
+agent = OpticsAgent::Agent.new
+```
+
 Register the Rack middleware (say in a `config.ru`):
 
 ```ruby
-use OpticsAgent::RackMiddleware
+use agent.rack_middleware
 ```
 
-Register the Graphql middleware
+Register the Graphql middleware:
 
 ```ruby
-Schema.middleware << OpticsAgent::GraphqlMiddleware.new
+Schema.middleware << agent.grapqhl_middleware
 ```
 
+Add something like this to your route:
+
+```ruby
+post '/graphql' do
+  request.body.rewind
+  document = JSON.parse request.body.read
+  result = Schema.execute(document["query"],
+    variables: document["variables"],
+    context: { optics_agent: env[:optics_agent] }
+  )
+  JSON.generate(result)
+end
+```
 
 ## Development
 

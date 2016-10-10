@@ -1,4 +1,5 @@
-require 'optics-agent/report'
+require 'optics-agent/agent'
+require 'optics-agent/reporting/query'
 
 module OpticsAgent
   class RackMiddleware
@@ -8,14 +9,20 @@ module OpticsAgent
 
     def call(env)
       begin
-        report = OpticsAgent::Report.new
+        start = Time.now
+
+        # XXX: figure out a way to pass this in here
+        agent = OpticsAgent::Agent.instance
+        query = OpticsAgent::Reporting::Query.new
+
         # Attach so resolver middleware can access
-        env["optics-agent.report"] = report
+        env[:optics_agent] = { agent: agent, query: query }
         result = @app.call(env)
 
-        # XXX: move this out of band
-        sleep 1
-        report.send
+        agent.current_report.add_query(query, Time.now - start)
+
+        # XXX: this should happen on an interval, driven by the agent
+        agent.send_report
 
         result
       rescue Exception => e
