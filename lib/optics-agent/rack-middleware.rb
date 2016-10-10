@@ -1,3 +1,5 @@
+require 'optics-agent/report'
+
 module OpticsAgent
   class RackMiddleware
     def initialize(app, options={})
@@ -5,10 +7,21 @@ module OpticsAgent
     end
 
     def call(env)
-      start = Time.now
-      result = @app.call(env)
-      puts "Request took #{((Time.now - start) * 1000 * 1000).to_i}ns"
-      result
+      begin
+        report = OpticsAgent::Report.new
+        # Attach so resolver middleware can access
+        env["optics-agent.report"] = report
+        result = @app.call(env)
+
+        # XXX: move this out of band
+        sleep 1
+        report.send
+
+        result
+      rescue Exception => e
+        puts "rescued"
+        p e
+      end
     end
   end
 end

@@ -4,14 +4,11 @@ module OpticsAgent
       start = Time.now
       result = next_middleware.call
 
-      args = ''
-      unless field_args.to_h.empty?
-        args = "(#{field_args.to_h.keys.map {|k| "#{k}: #{field_args[k]}"}})"
-      end
+      nanos = (Time.now - start) * 1000 * 1000
 
-      resolver_str = "#{parent_type}.#{field_definition.name}#{args}"
+      optics_report = query_context['optics-agent.report']
+      optics_report.report_field(parent_type.to_s, field_definition.name, nanos)
 
-      puts "#{resolver_str} took #{((Time.now - start) * 1000 * 1000).to_i}ns"
       result
     end
   end
