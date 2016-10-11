@@ -2,11 +2,10 @@ require 'optics-agent/graphql-middleware'
 require 'graphql'
 
 include OpticsAgent
-include GraphQL
 
 describe GraphqlMiddleware do
   it 'collects the correct query stats' do
-    person_type = ObjectType.define do
+    person_type = GraphQL::ObjectType.define do
       name "Person"
       field :firstName do
         type types.String
@@ -17,7 +16,7 @@ describe GraphqlMiddleware do
         resolve -> (obj, args, ctx) { sleep(0.100); return 'Coleman' }
       end
     end
-    query_type = ObjectType.define do
+    query_type = GraphQL::ObjectType.define do
       name 'Query'
       field :person do
         type person_type
@@ -25,7 +24,7 @@ describe GraphqlMiddleware do
       end
     end
 
-    schema = Schema.define do
+    schema = GraphQL::Schema.define do
       query query_type
     end
 
