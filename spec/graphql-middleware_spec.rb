@@ -6,7 +6,7 @@ include GraphQL
 
 describe GraphqlMiddleware do
   it 'collects the correct query stats' do
-    PersonType = ObjectType.define do
+    person_type = ObjectType.define do
       name "Person"
       field :firstName do
         type types.String
@@ -17,22 +17,22 @@ describe GraphqlMiddleware do
         resolve -> (obj, args, ctx) { sleep(0.100); return 'Coleman' }
       end
     end
-    QueryType = ObjectType.define do
+    query_type = ObjectType.define do
       name 'Query'
       field :person do
-        type PersonType
+        type person_type
         resolve -> (obj, args, ctx) { sleep(0.050); return {} }
       end
     end
 
-    MySchema = Schema.define do
-      query QueryType
+    schema = Schema.define do
+      query query_type
     end
 
-    MySchema.middleware << GraphqlMiddleware.new
+    schema.middleware << GraphqlMiddleware.new
 
     query = spy("query")
-    MySchema.execute('{ person { firstName lastName } }', {
+    schema.execute('{ person { firstName lastName } }', {
       context: { optics_agent: { query: query } }
     })
 
