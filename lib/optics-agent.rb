@@ -1,2 +1,4 @@
-require 'optics-agent/rack-middleware'
-require 'optics-agent/graphql-middleware'
+module OpticsAgent
+end
+
+require 'optics-agent/agent'

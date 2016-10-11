@@ -4,12 +4,14 @@ require 'graphql'
 require 'apollo/optics/proto/reports_pb'
 require 'optics-agent/reporting/header'
 require 'optics-agent/reporting/send-message'
+require 'optics-agent/Instrumentation/query-schema'
 
 module OpticsAgent::Reporting
   # A report for a whole schema
   class Schema
     include Apollo::Optics::Proto
     include OpticsAgent::Instrumentation
+    include OpticsAgent::Reporting
 
     attr_accessor :message
 
@@ -48,6 +50,7 @@ module OpticsAgent::Reporting
     end
 
     def send
+      puts 'sending message'
       send_message(@message)
     end
   end

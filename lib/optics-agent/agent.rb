@@ -2,6 +2,7 @@ require 'singleton'
 require 'optics-agent/rack-middleware'
 require 'optics-agent/graphql-middleware'
 require 'optics-agent/reporting/report'
+require 'optics-agent/reporting/schema'
 
 module OpticsAgent
   # XXX: this is a class but acts as a singleton right now.
@@ -15,6 +16,17 @@ module OpticsAgent
 
     def initialize
       @current_report = OpticsAgent::Reporting::Report.new
+    end
+
+    def instrument_schema(schema)
+      # XXX: do this out of band and delay it
+      report_schema(schema)
+      schema.middleware << graphql_middleware
+    end
+
+    def report_schema(schema)
+      schema_report = OpticsAgent::Reporting::Schema.new(schema)
+      schema_report.send
     end
 
     def send_report
