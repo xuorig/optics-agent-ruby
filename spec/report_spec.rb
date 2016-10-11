@@ -31,6 +31,6 @@ describe Report do
     firstName_stats = person_stats.field.find { |s| s.name === 'firstName' }
     expect(firstName_stats.latency_count.length).to eq(256)
     expect(firstName_stats.latency_count.reduce(&:+)).to eq(1)
-    expect(firstName_stats.latency_count[145]).to eq(1)
+    expect(firstName_stats.latency_count[73]).to eq(1)
   end
 end

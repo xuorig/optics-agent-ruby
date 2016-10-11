@@ -20,7 +20,7 @@ module OpticsAgent::Reporting
       @field_stats = {}
     end
 
-    def report_field(type_name, field_name, nanos)
+    def report_field(type_name, field_name, micros)
       unless @type_stats[type_name]
         @field_stats[type_name] = {}
 
@@ -41,7 +41,7 @@ module OpticsAgent::Reporting
         @type_stats[type_name].field << field_stat
       end
 
-      bucket = self.latency_bucket(nanos)
+      bucket = self.latency_bucket(micros)
       @field_stats[type_name][field_name].latency_count[bucket] += 1
     end
   end

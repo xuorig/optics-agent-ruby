@@ -4,10 +4,10 @@ module OpticsAgent
       start = Time.now
       result = next_middleware.call
 
-      nanos = (Time.now - start) * 1000 * 1000
+      micros = (Time.now - start) * 1000 * 1000
 
       query = query_context[:optics_agent][:query]
-      query.report_field(parent_type.to_s, field_definition.name, nanos)
+      query.report_field(parent_type.to_s, field_definition.name, micros)
 
       result
     end

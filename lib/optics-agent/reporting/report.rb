@@ -37,7 +37,7 @@ module OpticsAgent::Reporting
       OpticsAgent::Reporting.send_message(@report)
     end
 
-    def add_query(query, nanos)
+    def add_query(query, micros)
       # XXX: what should the queryKey be and where do we get it from?
       queryKey = '{ posts { author { firstName } } }'
 
