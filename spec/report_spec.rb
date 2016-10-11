@@ -33,4 +33,38 @@ describe Report do
     expect(firstName_stats.latency_count.reduce(&:+)).to eq(1)
     expect(firstName_stats.latency_count[73]).to eq(1)
   end
+
+  it "can aggregate the results of multiple queries with the same shape" do
+    queryOne = Query.new
+    queryOne.report_field 'Person', 'firstName', 1000
+    queryOne.report_field 'Person', 'lastName', 1000
+    queryOne.report_field 'Query', 'person', 2200
+
+    queryTwo = Query.new
+    queryTwo.report_field 'Person', 'firstName', 500
+    queryTwo.report_field 'Person', 'lastName', 500
+    queryTwo.report_field 'Query', 'person', 200
+
+    report = Report.new
+    report.add_query queryOne, 3
+    report.add_query queryTwo, 3
+    report.finish!
+
+    expect(report.report).to be_an_instance_of(StatsReport)
+    stats_report = report.report
+    expect(stats_report.per_signature.keys.length).to equal(1)
+
+    signature_stats = stats_report.per_signature.values.first
+    expect(signature_stats.per_type.length).to equal(2)
+    expect(signature_stats.per_type.map &:name).to match_array(['Person', 'Query'])
+
+    person_stats = signature_stats.per_type.find { |s| s.name === 'Person' }
+    expect(person_stats.field.length).to equal(2)
+    expect(person_stats.field.map &:name).to match_array(['firstName', 'lastName'])
+
+    firstName_stats = person_stats.field.find { |s| s.name === 'firstName' }
+    expect(firstName_stats.latency_count.reduce(&:+)).to eq(2)
+    expect(firstName_stats.latency_count[66]).to eq(1)
+    expect(firstName_stats.latency_count[73]).to eq(1)
+  end
 end

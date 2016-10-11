@@ -37,13 +37,11 @@ module OpticsAgent::Reporting
       OpticsAgent::Reporting.send_message(@report)
     end
 
+    # XXX: record timing / client
     def add_query(query, micros)
-      # XXX: what should the queryKey be and where do we get it from?
-      queryKey = '{ posts { author { firstName } } }'
+      @report.per_signature[query.query_key] ||= StatsPerSignature.new
 
-      # XXX: we'll need to either merge this with our stats_per_signature
-      # for this queryKey or store Queries in a different format
-      @report.per_signature[queryKey] = query.stats_per_signature
+      query.add_to_stats @report.per_signature[query.query_key]
     end
   end
 end
