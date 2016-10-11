@@ -8,6 +8,8 @@ module OpticsAgent::Reporting
   class Report
     include Apollo::Optics::Proto
 
+    attr_accessor :report
+
     def initialize
       # internal report that we encapsulate
       @report = StatsReport.new({
