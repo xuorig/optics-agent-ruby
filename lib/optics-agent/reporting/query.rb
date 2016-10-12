@@ -10,13 +10,14 @@ module OpticsAgent::Reporting
 
     attr_accessor :document
 
-    def initialize
+    def initialize(rack_env)
       @reports = []
 
       @document = nil
+      @rack_env = rack_env
     end
 
-    def query_key
+    def signature
       # Note this isn't actually possible but would be a sensible spot to throw
       # if the user forgets to call `.with_document`
       unless @document
@@ -28,15 +29,19 @@ module OpticsAgent::Reporting
     end
 
     # we do nothing when reporting to minimize impact
-    def report_field(type_name, field_name, micros)
-      @reports << [type_name, field_name, micros]
+    def report_field(type_name, field_name, start_time, end_time)
+      @reports << [type_name, field_name, start_time, end_time]
+    end
+
+    def each_report
+      @reports.each do |report|
+        yield *report
+      end
     end
 
     # add our results to an existing StatsPerSignature
     def add_to_stats(stats_per_signature)
-      @reports.each do |report|
-        type_name, field_name, micros = report
-
+      each_report do |type_name, field_name, start_time, end_time|
         type_stat = stats_per_signature.per_type.find { |ts| ts.name == type_name }
         unless type_stat
           type_stat = TypeStat.new({ name: type_name })
@@ -52,6 +57,7 @@ module OpticsAgent::Reporting
           type_stat.field << field_stat
         end
 
+        micros = (end_time - start_time) * 1e6
         bucket = latency_bucket(micros)
         field_stat.latency_count[bucket] += 1
       end

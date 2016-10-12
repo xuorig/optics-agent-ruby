@@ -13,7 +13,7 @@ module OpticsAgent
 
         # XXX: figure out a way to pass this in here
         agent = OpticsAgent::Agent.instance
-        query = OpticsAgent::Reporting::Query.new
+        query = OpticsAgent::Reporting::Query.new(env)
 
         # Attach so resolver middleware can access
         env[:optics_agent] = {

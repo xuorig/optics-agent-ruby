@@ -37,10 +37,10 @@ describe GraphqlMiddleware do
 
     expect(query).to have_received(:report_field).exactly(3).times
     expect(query).to have_received(:report_field)
-      .with('Query', 'person', be_within(50000).of(50 * 1000))
+      .with('Query', 'person', be_instance_of(Time), be_instance_of(Time))
     expect(query).to have_received(:report_field)
-      .with('Person', 'firstName', be_within(50000).of(100 * 1000))
+      .with('Person', 'firstName', be_instance_of(Time), be_instance_of(Time))
     expect(query).to have_received(:report_field)
-      .with('Person', 'lastName', be_within(50000).of(100 * 1000))
+      .with('Person', 'lastName', be_instance_of(Time), be_instance_of(Time))
   end
 end

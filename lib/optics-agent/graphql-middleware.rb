@@ -1,13 +1,12 @@
 module OpticsAgent
   class GraphqlMiddleware
     def call(parent_type, parent_object, field_definition, field_args, query_context, next_middleware)
-      start = Time.now
+      start_time = Time.now
       result = next_middleware.call
-
-      micros = (Time.now - start) * 1000 * 1000
+      end_time = Time.now
 
       query = query_context[:optics_agent][:query]
-      query.report_field(parent_type.to_s, field_definition.name, micros)
+      query.report_field(parent_type.to_s, field_definition.name, start_time, end_time)
 
       result
     end

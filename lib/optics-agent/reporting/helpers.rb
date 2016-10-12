@@ -7,4 +7,11 @@ module OpticsAgent::Reporting
       agent_version: '0'
     })
   end
+
+  def generate_timestamp(time)
+    Apollo::Optics::Proto::Timestamp.new({
+      seconds: time.to_i,
+      nanos: time % 1 * 1e9
+    });
+  end
 end

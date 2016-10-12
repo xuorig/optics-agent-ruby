@@ -39,10 +39,10 @@ module OpticsAgent::Reporting
     end
 
     # XXX: record timing / client
-    def add_query(query, micros)
-      @report.per_signature[query.query_key] ||= StatsPerSignature.new
+    def add_query(query, start_time, end_time)
+      @report.per_signature[query.signature] ||= StatsPerSignature.new
 
-      query.add_to_stats @report.per_signature[query.query_key]
+      query.add_to_stats @report.per_signature[query.signature]
     end
 
     # take a graphql schema and add returnTypes to all the fields on our report
