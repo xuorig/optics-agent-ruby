@@ -44,5 +44,29 @@ module OpticsAgent::Reporting
 
       query.add_to_stats @report.per_signature[query.query_key]
     end
+
+    # take a graphql schema and add returnTypes to all the fields on our report
+    def decorate_from_schema(schema)
+      each_field do |type_stat, field_stat|
+        type = schema.types[type_stat.name]
+        throw "Type #{type_stat.name} not found!" unless type
+
+        field = type.fields[field_stat.name]
+        throw "Field #{type_stat.name}.#{field_stat.name} not found!" unless field
+
+        field_stat.returnType = field.type.to_s
+      end
+    end
+
+    # do something once per field we've collected
+    def each_field
+      @report.per_signature.values.each do |sps|
+        sps.per_type.each do |type|
+          type.field.each do |field|
+            yield type, field
+          end
+        end
+      end
+    end
   end
 end

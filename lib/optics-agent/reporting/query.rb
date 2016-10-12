@@ -47,8 +47,6 @@ module OpticsAgent::Reporting
         unless field_stat
           field_stat = FieldStat.new({
             name: field_name,
-            # XXX: look up returnType from schema or pass it in?
-            returnType: 'String',
             latency_count: empty_latency_count
           })
           type_stat.field << field_stat

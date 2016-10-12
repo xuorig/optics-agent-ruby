@@ -19,6 +19,7 @@ module OpticsAgent
     end
 
     def instrument_schema(schema)
+      @schema = schema
       # XXX: do this out of band and delay it
       report_schema(schema)
       schema.middleware << graphql_middleware
@@ -30,6 +31,7 @@ module OpticsAgent
     end
 
     def send_report
+      @current_report.decorate_from_schema(@schema)
       @current_report.send
       @current_report = OpticsAgent::Reporting::Report.new
     end
