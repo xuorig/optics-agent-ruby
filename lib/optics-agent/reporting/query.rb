@@ -8,13 +8,23 @@ module OpticsAgent::Reporting
     include Apollo::Optics::Proto
     include OpticsAgent::Normalization
 
-    attr_accessor :query_key
+    attr_accessor :document
 
     def initialize
       @reports = []
 
-      # TODO: take query as arg, normalize
-      @query_key = '{ posts { author { firstName } } }'
+      @document = nil
+    end
+
+    def query_key
+      # Note this isn't actually possible but would be a sensible spot to throw
+      # if the user forgets to call `.with_document`
+      unless @document
+        throw "You must call .with_document on the optics context"
+      end
+
+      # TODO: query normalization here
+      return document["query"].to_s
     end
 
     # we do nothing when reporting to minimize impact

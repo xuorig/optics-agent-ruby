@@ -40,7 +40,7 @@ post '/graphql' do
   document = JSON.parse request.body.read
   result = Schema.execute(document["query"],
     variables: document["variables"],
-    context: { optics_agent: env[:optics_agent] }
+    context: { optics_agent: env[:optics_agent].with_document(document) }
   )
   JSON.generate(result)
 end
