@@ -1,10 +1,12 @@
 require 'apollo/optics/proto/reports_pb'
+require 'optics-agent/normalization/latency'
 
 module OpticsAgent::Reporting
   # This is a convenience class that enables us to fairly blindly
   # pass in data as we resolve a query
   class Query
     include Apollo::Optics::Proto
+    include OpticsAgent::Normalization
 
     attr_accessor :query_key
 

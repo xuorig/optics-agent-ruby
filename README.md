@@ -29,7 +29,7 @@ use agent.rack_middleware
 Register the Graphql middleware:
 
 ```ruby
-Schema.middleware << agent.grapqhl_middleware
+agent.instrument_schema(YourSchema)
 ```
 
 Add something like this to your route:

@@ -50,8 +50,7 @@ module OpticsAgent::Reporting
     end
 
     def send
-      puts 'sending message'
-      send_message(@message)
+      send_message('/api/ss/schema', @message)
     end
   end
 end

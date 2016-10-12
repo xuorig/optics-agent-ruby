@@ -3,9 +3,9 @@ require 'net/http'
 module OpticsAgent
   module Reporting
     OPTICS_URL = 'https://optics-report.apollodata.com'
-    def send_message(message)
+    def send_message(path, message)
 
-      req = Net::HTTP::Post.new('/api/ss/stats')
+      req = Net::HTTP::Post.new(path)
       req['x-api-key'] = ENV['OPTICS_API_KEY']
       req['user-agent'] = "optics-agent-rb"
 

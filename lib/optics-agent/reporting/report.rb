@@ -7,6 +7,7 @@ module OpticsAgent::Reporting
   # convenience methods
   class Report
     include Apollo::Optics::Proto
+    include OpticsAgent::Reporting
 
     attr_accessor :report
 
@@ -34,7 +35,7 @@ module OpticsAgent::Reporting
 
     def send
       self.finish!
-      OpticsAgent::Reporting.send_message(@report)
+      send_message('/api/ss/stats', @report)
     end
 
     # XXX: record timing / client
