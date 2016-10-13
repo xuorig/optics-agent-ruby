@@ -68,6 +68,9 @@ module OpticsAgent::Reporting
     # take a graphql schema and add returnTypes to all the fields on our report
     def decorate_from_schema(schema)
       each_field do |type_stat, field_stat|
+        # short circuit for special fields
+        return type_stat.name if (field_stat.name == '__typename')
+
         type = schema.types[type_stat.name]
         throw "Type #{type_stat.name} not found!" unless type
 

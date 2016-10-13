@@ -17,7 +17,7 @@ Create an agent
 
 ```ruby
 # we expect one day there'll be some options
-agent = OpticsAgent::Agent.new
+agent = OpticsAgent::Agent.instance
 ```
 
 Register the Rack middleware (say in a `config.ru`):
