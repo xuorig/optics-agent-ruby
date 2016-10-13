@@ -9,7 +9,7 @@ module OpticsAgent
 
     def call(env)
       begin
-        start = Time.now
+        start_time = Time.now
 
         # XXX: figure out a way to pass this in here
         agent = OpticsAgent::Agent.instance
@@ -30,7 +30,7 @@ module OpticsAgent
         # XXX: this approach means if the user forgets to call with_document
         # we just never log queries. Can we detect if the request is a graphql one?
         if (query.document)
-          agent.current_report.add_query(query, Time.now - start)
+          agent.add_query(query, start_time, Time.now)
 
           # XXX: this should happen on an interval, driven by the agent
           agent.send_report

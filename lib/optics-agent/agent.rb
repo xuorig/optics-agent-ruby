@@ -3,6 +3,7 @@ require 'optics-agent/rack-middleware'
 require 'optics-agent/graphql-middleware'
 require 'optics-agent/reporting/report'
 require 'optics-agent/reporting/schema'
+require 'optics-agent/reporting/query-trace'
 
 module OpticsAgent
   # XXX: this is a class but acts as a singleton right now.
@@ -11,11 +12,12 @@ module OpticsAgent
   #    or ask the user to pass the agent as an option) to avoid it
   class Agent
     include Singleton
+    include OpticsAgent::Reporting
 
     attr_accessor :current_report
 
     def initialize
-      @current_report = OpticsAgent::Reporting::Report.new
+      @current_report = Report.new
     end
 
     def instrument_schema(schema)
@@ -26,14 +28,27 @@ module OpticsAgent
     end
 
     def report_schema(schema)
-      schema_report = OpticsAgent::Reporting::Schema.new(schema)
+      schema_report = Schema.new(schema)
       schema_report.send
+    end
+
+    def add_query(query, start_time, end_time)
+      @current_report.add_query(query, start_time, end_time)
+
+      # for now, we are very naive about this, but we should really
+      # just be sending one per latency bucket or something
+      send_trace(query, start_time, end_time)
     end
 
     def send_report
       @current_report.decorate_from_schema(@schema)
       @current_report.send
-      @current_report = OpticsAgent::Reporting::Report.new
+      @current_report = Report.new
+    end
+
+    def send_trace(query, start_time, end_time)
+      query_trace = QueryTrace.new(query, start_time, end_time)
+      query_trace.send
     end
 
     def rack_middleware

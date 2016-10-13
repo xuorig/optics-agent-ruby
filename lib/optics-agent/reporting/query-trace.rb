@@ -48,7 +48,7 @@ module OpticsAgent::Reporting
     end
 
     def send
-      send_message('/api/ss/trace', @report)
+      send_message('/api/ss/traces', @report)
     end
   end
 end
