@@ -24,3 +24,26 @@ Register the Graphql middleware
 ```ruby
 Schema.middleware << OpticsAgent::GraphqlMiddleware.new
 ```
+
+
+## Development
+
+### Building protobuf definitions
+
+Ensure you've installed `protobuf` and development dependencies.
+
+```bash
+# this works on OSX
+brew install protobuf
+
+# ensure it's version 3
+protoc --version
+
+bundle install
+````
+
+Compile the `.proto` definitions with
+
+```bash
+bundle exec rake proto:compile
+```

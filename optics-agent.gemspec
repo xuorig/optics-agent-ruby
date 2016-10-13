@@ -9,11 +9,15 @@ Gem::Specification.new do |s|
   s.files       = [
     "lib/optics-agent.rb",
     "lib/optics-agent/rack-middleware.rb",
-    "lib/optics-agent/graphql-middleware.rb"
+    "lib/optics-agent/graphql-middleware.rb",
+    "lib/optics-agent/proto/reports_pb.rb"
   ]
   s.homepage    =
     'http://rubygems.org/gems/optics-agent'
   s.license     = 'MIT'
 
   s.add_runtime_dependency 'graphql', '~> 0.19.0'
+
+  s.add_development_dependency 'rake', '~> 11.3.0'
+  s.add_development_dependency 'google-protobuf', '~> 3.1.0'
 end
