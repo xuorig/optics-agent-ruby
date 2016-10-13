@@ -13,7 +13,7 @@ module OpticsAgent
 
         # XXX: figure out a way to pass this in here
         agent = OpticsAgent::Agent.instance
-        query = OpticsAgent::Reporting::Query.new(env)
+        query = OpticsAgent::Reporting::Query.new
 
         # Attach so resolver middleware can access
         env[:optics_agent] = {
@@ -30,7 +30,7 @@ module OpticsAgent
         # XXX: this approach means if the user forgets to call with_document
         # we just never log queries. Can we detect if the request is a graphql one?
         if (query.document)
-          agent.add_query(query, start_time, Time.now)
+          agent.add_query(query, env, start_time, Time.now)
 
           # XXX: this should happen on an interval, driven by the agent
           agent.send_report

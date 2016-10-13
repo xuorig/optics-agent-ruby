@@ -19,13 +19,13 @@ end
 
 describe QueryTrace do
   it "can represent a simple query" do
-    query = Query.new({})
+    query = Query.new
     query.report_field 'Person', 'firstName', 1, 1.1
     query.report_field 'Person', 'lastName', 1, 1.1
     query.report_field 'Query', 'person', 1, 1.22
     query.document = DocumentMock.new('key')
 
-    trace = QueryTrace.new(query, 1, 1.25)
+    trace = QueryTrace.new(query, {}, 1, 1.25)
 
     expect(trace.report).to be_instance_of(TracesReport)
     expect(trace.report.trace.length).to eq(1)

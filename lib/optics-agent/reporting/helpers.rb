@@ -14,4 +14,19 @@ module OpticsAgent::Reporting
       nanos: time.to_i % 1 * 1e9
     });
   end
+
+  # XXX: implement
+  def client_info(rack_env)
+    {
+      client_name: 'none',
+      client_version: 'none',
+      client_address: '::1'
+    }
+  end
+
+  def add_latency(counts, start_time, end_time)
+    micros = (end_time - start_time) * 1e6
+    bucket = latency_bucket(micros)
+    counts[bucket] += 1
+  end
 end

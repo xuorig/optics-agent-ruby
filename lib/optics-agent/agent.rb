@@ -32,12 +32,12 @@ module OpticsAgent
       schema_report.send
     end
 
-    def add_query(query, start_time, end_time)
-      @current_report.add_query(query, start_time, end_time)
+    def add_query(query, rack_env, start_time, end_time)
+      @current_report.add_query(query, rack_env, start_time, end_time)
 
       # for now, we are very naive about this, but we should really
       # just be sending one per latency bucket or something
-      send_trace(query, start_time, end_time)
+      send_trace(query, rack_env, start_time, end_time)
     end
 
     def send_report
@@ -46,8 +46,8 @@ module OpticsAgent
       @current_report = Report.new
     end
 
-    def send_trace(query, start_time, end_time)
-      query_trace = QueryTrace.new(query, start_time, end_time)
+    def send_trace(query, rack_env, start_time, end_time)
+      query_trace = QueryTrace.new(query, rack_env, start_time, end_time)
       query_trace.send
     end
 

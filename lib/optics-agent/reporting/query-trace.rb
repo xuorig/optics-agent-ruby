@@ -11,19 +11,19 @@ module OpticsAgent::Reporting
 
     attr_accessor :report
 
-    def initialize(query, start_time, end_time)
+    def initialize(query, rack_env, start_time, end_time)
       trace = Trace.new({
         start_time: generate_timestamp(start_time),
         signature: query.signature
       })
 
-      # XXX: report trace details (not clear yet from the JS agent what should be here)
+      # XXX: report trace details (not totally clear yet from the JS agent what should be here)
       trace.details = Trace::Details.new({})
 
-      # XXX: get client details from the request
-      trace.client_name = "none"
-      trace.client_version = "none"
-      trace.client_address = "::1"
+      info = client_info(rack_env)
+      trace.client_name = info[:client_name]
+      trace.client_version = info[:client_version]
+      trace.client_address = info[:client_address]
       trace.http = Trace::HTTPInfo.new({
         host: "localhost:8080",
         path: "/graphql"

@@ -19,14 +19,14 @@ end
 
 describe Report do
   it "can represent a simple query" do
-    query = Query.new({})
+    query = Query.new
     query.report_field 'Person', 'firstName', 1, 1.1
     query.report_field 'Person', 'lastName', 1, 1.1
     query.report_field 'Query', 'person', 1, 1.22
     query.document = DocumentMock.new('key')
 
     report = Report.new
-    report.add_query query, 1, 1.25
+    report.add_query query, {}, 1, 1.25
     report.finish!
 
     expect(report.report).to be_an_instance_of(StatsReport)
@@ -48,21 +48,21 @@ describe Report do
   end
 
   it "can aggregate the results of multiple queries with the same shape" do
-    queryOne = Query.new({})
+    queryOne = Query.new
     queryOne.report_field 'Person', 'firstName', 1, 1.1
     queryOne.report_field 'Person', 'lastName', 1, 1.1
     queryOne.report_field 'Query', 'person', 1, 1.22
     queryOne.document = DocumentMock.new('key')
 
-    queryTwo = Query.new({})
+    queryTwo = Query.new
     queryTwo.report_field 'Person', 'firstName', 1, 1.05
     queryTwo.report_field 'Person', 'lastName', 1, 1.05
     queryTwo.report_field 'Query', 'person', 1, 1.2
     queryTwo.document = DocumentMock.new('key')
 
     report = Report.new
-    report.add_query queryOne, 1, 1.1
-    report.add_query queryTwo, 1, 1.1
+    report.add_query queryOne, {}, 1, 1.1
+    report.add_query queryTwo, {}, 1, 1.1
     report.finish!
 
     expect(report.report).to be_an_instance_of(StatsReport)
@@ -84,21 +84,21 @@ describe Report do
   end
 
   it "can aggregate the results of multiple queries with a different shape" do
-    queryOne = Query.new({})
+    queryOne = Query.new
     queryOne.report_field 'Person', 'firstName', 1, 1.1
     queryOne.report_field 'Person', 'lastName', 1, 1.1
     queryOne.report_field 'Query', 'person', 1, 1.22
     queryOne.document = DocumentMock.new('keyOne')
 
-    queryTwo = Query.new({})
+    queryTwo = Query.new
     queryTwo.report_field 'Person', 'firstName', 1, 1.05
     queryTwo.report_field 'Person', 'lastName', 1, 1.05
     queryTwo.report_field 'Query', 'person', 1, 1.02
     queryTwo.document = DocumentMock.new('keyTwo')
 
     report = Report.new
-    report.add_query queryOne, 1, 1.1
-    report.add_query queryTwo, 1, 1.1
+    report.add_query queryOne, {}, 1, 1.1
+    report.add_query queryTwo, {}, 1, 1.1
     report.finish!
 
     expect(report.report).to be_an_instance_of(StatsReport)
@@ -120,13 +120,13 @@ describe Report do
 
 
   it "can decorate it's fields with resultTypes from a schema" do
-    query = Query.new({})
+    query = Query.new
     query.report_field 'Person', 'firstName', 1, 1.1
     query.report_field 'Person', 'age', 1, 1.1
     query.document = DocumentMock.new('key')
 
     report = Report.new
-    report.add_query query, 1, 1.25
+    report.add_query query, {}, 1, 1.25
     report.finish!
 
     person_type = GraphQL::ObjectType.define do
