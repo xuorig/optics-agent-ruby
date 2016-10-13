@@ -2,10 +2,12 @@ PATH
   remote: .
   specs:
     optics-agent (0.0.0)
+      graphql (~> 0.19.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    graphql (0.19.1)
 
 PLATFORMS
   ruby
