@@ -1,4 +1,5 @@
 require 'apollo/optics/proto/reports_pb'
+require 'optics-agent/reporting/helpers'
 require 'optics-agent/normalization/latency'
 
 module OpticsAgent::Reporting
@@ -6,15 +7,15 @@ module OpticsAgent::Reporting
   # pass in data as we resolve a query
   class Query
     include Apollo::Optics::Proto
+    include OpticsAgent::Reporting
     include OpticsAgent::Normalization
 
     attr_accessor :document
 
-    def initialize(rack_env)
+    def initialize
       @reports = []
 
       @document = nil
-      @rack_env = rack_env
     end
 
     def signature
@@ -57,9 +58,7 @@ module OpticsAgent::Reporting
           type_stat.field << field_stat
         end
 
-        micros = (end_time - start_time) * 1e6
-        bucket = latency_bucket(micros)
-        field_stat.latency_count[bucket] += 1
+        add_latency(field_stat.latency_count, start_time, end_time)
       end
     end
   end

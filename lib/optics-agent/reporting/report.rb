@@ -1,5 +1,7 @@
 require 'apollo/optics/proto/reports_pb'
 require 'optics-agent/reporting/send-message'
+require 'optics-agent/reporting/helpers'
+require 'optics-agent/normalization/latency'
 
 module OpticsAgent::Reporting
   # This class represents a complete report that we send to the optics server
@@ -8,6 +10,7 @@ module OpticsAgent::Reporting
   class Report
     include Apollo::Optics::Proto
     include OpticsAgent::Reporting
+    include OpticsAgent::Normalization
 
     attr_accessor :report
 
@@ -39,10 +42,27 @@ module OpticsAgent::Reporting
     end
 
     # XXX: record timing / client
-    def add_query(query, start_time, end_time)
+    def add_query(query, rack_env, start_time, end_time)
       @report.per_signature[query.signature] ||= StatsPerSignature.new
+      signature_stats = @report.per_signature[query.signature]
 
-      query.add_to_stats @report.per_signature[query.signature]
+      add_client_stats(signature_stats, rack_env, start_time, end_time)
+      query.add_to_stats(signature_stats)
+    end
+
+    def add_client_stats(signature_stats, rack_env, start_time, end_time)
+      info = client_info(rack_env)
+      signature_stats.per_client_name[info[:client_name]] ||= StatsPerClientName.new({
+        latency_count: empty_latency_count,
+        error_count: empty_latency_count
+      })
+      client_stats = signature_stats.per_client_name[info[:client_name]]
+
+      # XXX: handle errors
+      add_latency(client_stats.latency_count, start_time, end_time)
+
+      client_stats.count_per_version[info[:client_version]] ||= 0
+      client_stats.count_per_version[info[:client_version]] += 1
     end
 
     # take a graphql schema and add returnTypes to all the fields on our report
