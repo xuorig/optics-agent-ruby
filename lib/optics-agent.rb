@@ -1,5 +1,4 @@
-require 'optics-agent/rack-middleware'
-require 'optics-agent/graphql-middleware'
-require 'optics-agent/reporting/send-report.rb'
+module OpticsAgent
+end
 
-OpticsAgent::Reporting.send_report
+require 'optics-agent/agent'
