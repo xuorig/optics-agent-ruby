@@ -69,15 +69,22 @@ module OpticsAgent::Reporting
     def decorate_from_schema(schema)
       each_field do |type_stat, field_stat|
         # short circuit for special fields
-        return type_stat.name if (field_stat.name == '__typename')
+        field_stat.returnType = type_stat.name if field_stat.name == '__typename'
 
-        type = schema.types[type_stat.name]
-        throw "Type #{type_stat.name} not found!" unless type
+        if type_stat.name == 'Query'
+          field_stat.returnType = '__Type' if field_stat.name == '__type'
+          field_stat.returnType = '__Schema' if field_stat.name == '__schema'
+        end
 
-        field = type.fields[field_stat.name]
-        throw "Field #{type_stat.name}.#{field_stat.name} not found!" unless field
+        if field_stat.returnType.empty?
+          type = schema.types[type_stat.name]
+          throw "Type #{type_stat.name} not found!" unless type
 
-        field_stat.returnType = field.type.to_s
+          field = type.fields[field_stat.name]
+          throw "Field #{type_stat.name}.#{field_stat.name} not found!" unless field
+
+          field_stat.returnType = field.type.to_s
+        end
       end
     end
 

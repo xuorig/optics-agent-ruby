@@ -155,4 +155,40 @@ describe Report do
     age_stats = person_stats.field.find { |s| s.name === 'age' }
     expect(age_stats.returnType).to eq('Int!')
   end
+
+  it "can handle introspection fields" do
+    query = Query.new
+    query.report_field 'Query', '__schema', 1, 1.1
+    query.report_field 'Query', '__typename', 1, 1.1
+    query.report_field 'Query', '__type', 1, 1.1
+    query.document = DocumentMock.new('key')
+
+    report = Report.new
+    report.add_query query, {}, 1, 1.25
+    report.finish!
+
+    query_type = GraphQL::ObjectType.define do
+      name 'Query'
+    end
+
+    schema = GraphQL::Schema.define do
+      query query_type
+    end
+
+    report.decorate_from_schema(schema)
+
+    stats_report = report.report
+    signature_stats = stats_report.per_signature.values.first
+    query_stats = signature_stats.per_type.find { |s| s.name === 'Query' }
+
+    schema_stats = query_stats.field.find { |s| s.name === '__schema' }
+    expect(schema_stats.returnType).to eq('__Schema')
+
+    type_stats = query_stats.field.find { |s| s.name === '__type' }
+    expect(type_stats.returnType).to eq('__Type')
+
+    typename_stats = query_stats.field.find { |s| s.name === '__typename' }
+    expect(typename_stats.returnType).to eq('Query')
+  end
+
 end
