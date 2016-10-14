@@ -1,7 +1,7 @@
 require 'singleton'
 require 'optics-agent/rack-middleware'
 require 'optics-agent/graphql-middleware'
-require 'optics-agent/reporting/report'
+require 'optics-agent/reporting/report_job'
 require 'optics-agent/reporting/schema'
 require 'optics-agent/reporting/query-trace'
 
@@ -14,10 +14,12 @@ module OpticsAgent
     include Singleton
     include OpticsAgent::Reporting
 
-    attr_accessor :current_report
+    attr_reader :schema
 
     def initialize
-      @current_report = Report.new
+      @query_queue = []
+      @semaphone = Mutex.new
+      ReportJob.perform_in(60, self)
     end
 
     def instrument_schema(schema)
@@ -33,22 +35,17 @@ module OpticsAgent
     end
 
     def add_query(query, rack_env, start_time, end_time)
-      @current_report.add_query(query, rack_env, start_time, end_time)
-
-      # for now, we are very naive about this, but we should really
-      # just be sending one per latency bucket or something
-      send_trace(query, rack_env, start_time, end_time)
+      @semaphone.synchronize {
+        @query_queue << [query, rack_env, start_time, end_time]
+      }
     end
 
-    def send_report
-      @current_report.decorate_from_schema(@schema)
-      @current_report.send
-      @current_report = Report.new
-    end
-
-    def send_trace(query, rack_env, start_time, end_time)
-      query_trace = QueryTrace.new(query, rack_env, start_time, end_time)
-      query_trace.send
+    def clear_query_queue
+      @semaphone.synchronize {
+        queue = @query_queue
+        @query_queue = []
+        queue
+      }
     end
 
     def rack_middleware

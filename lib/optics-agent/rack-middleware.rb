@@ -31,9 +31,6 @@ module OpticsAgent
         # we just never log queries. Can we detect if the request is a graphql one?
         if (query.document)
           agent.add_query(query, env, start_time, Time.now)
-
-          # XXX: this should happen on an interval, driven by the agent
-          agent.send_report
         end
 
         result
