@@ -2,7 +2,7 @@ require 'singleton'
 require 'optics-agent/rack-middleware'
 require 'optics-agent/graphql-middleware'
 require 'optics-agent/reporting/report_job'
-require 'optics-agent/reporting/schema'
+require 'optics-agent/reporting/schema_job'
 require 'optics-agent/reporting/query-trace'
 
 module OpticsAgent
@@ -24,14 +24,10 @@ module OpticsAgent
 
     def instrument_schema(schema)
       @schema = schema
-      # XXX: do this out of band and delay it
-      report_schema(schema)
       schema.middleware << graphql_middleware
-    end
 
-    def report_schema(schema)
-      schema_report = Schema.new(schema)
-      schema_report.send
+      puts 'scheduling schema job'
+      SchemaJob.perform_in(10, self)
     end
 
     def add_query(query, rack_env, start_time, end_time)
