@@ -4,7 +4,7 @@ require 'graphql'
 require 'apollo/optics/proto/reports_pb'
 require 'optics-agent/reporting/helpers'
 require 'optics-agent/reporting/send-message'
-require 'optics-agent/Instrumentation/query-schema'
+require 'optics-agent/instrumentation/query-schema'
 
 module OpticsAgent::Reporting
   # A report for a whole schema
