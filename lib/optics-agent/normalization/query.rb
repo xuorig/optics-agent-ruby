@@ -26,7 +26,7 @@ module OpticsAgent
         visitor.leave << -> (_, _) { current = stack.shift }
 
         visitor[Nodes::Argument].leave << -> (node, parent) do
-          stack[0][:arguments] << "#{node.name}:#{generize_type(node.value)}"
+          stack[0][:arguments] << "#{node.name}:#{genericize_type(node.value)}"
         end
 
         visitor[Nodes::Directive].leave << -> (node, parent) do
@@ -71,8 +71,7 @@ module OpticsAgent
           vars = nil
           unless node.variables.empty?
             variable_strs = node.variables.sort_by(&:name).map do |variable|
-              # XXX: does this handle non-null or array types?
-              "$#{variable.name}:#{variable.type.name}"
+              "$#{variable.name}:#{format_argument_type(variable.type)}"
             end
             vars = "(#{variable_strs.join(',')})"
           end
@@ -123,8 +122,18 @@ module OpticsAgent
         end
       end
 
-      # XXX: I've no idea what an enum or object will look like here
-      def generize_type(value)
+      def format_argument_type(type)
+        case type
+        when Nodes::ListType
+          "[#{format_argument_type(type.of_type)}]"
+        when Nodes::NonNullType
+          "#{format_argument_type(type.of_type)}!"
+        else
+          type.name
+        end
+      end
+
+      def genericize_type(value)
         case value
         when Nodes::VariableIdentifier
           "$#{value.name}"
@@ -136,6 +145,10 @@ module OpticsAgent
           value.to_s
         when Array
           "[]"
+        when Nodes::Enum
+          value.name
+        when Nodes::InputObject
+          "{}"
         end
       end
     end

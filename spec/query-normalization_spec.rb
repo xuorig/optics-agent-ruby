@@ -29,6 +29,24 @@ TEST_QUERIES = [
     'query OpName {user {name}}',
   ],
   [
+    'with various inline types',
+    'query OpName {
+      user {
+        name(apple: [[10]], cat: ENUM_VALUE, bag: {input: "value"})
+      }
+    }',
+    'query OpName {user {name(apple:[], bag:{}, cat:ENUM_VALUE)}}',
+  ],
+  [
+    'with various argument types',
+    'query OpName($c: Int!, $a: [[Boolean!]!], $b: EnumType) {
+      user {
+        name(apple: $a, cat: $c, bag: $b)
+      }
+    }',
+    'query OpName($a:[[Boolean!]!],$b:EnumType,$c:Int!) {user {name(apple:$a, bag:$b, cat:$c)}}',
+  ],
+  [
     'fragment',
     '{
       user {
