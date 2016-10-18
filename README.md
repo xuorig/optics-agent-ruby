@@ -64,7 +64,7 @@ The equivalent of the above for Rails is:
 Create an agent in `config/apllication.rb`, and register the rack middleware:
 
 ```ruby
-module XXXRails
+module YourApplicationRails
   class Application < Rails::Application
     # ...
 
