@@ -20,7 +20,7 @@ To your `Gemfile`
 
 ### API key
 
-You'll need to run your app with the `OPTICS_API_KEY` environment variable set to the name of your Apollo Optics service; at the moment Optics is in early access alpha--[get in touch](http://www.apollostack.com/optics) if you want to be part of our early access program.
+You'll need to run your app with the `OPTICS_API_KEY` environment variable set to the API key of your Apollo Optics service; at the moment Optics is in early access alpha--[get in touch](http://www.apollostack.com/optics) if you want to be part of our early access program.
 
 ### Basic Rack/Sinatra
 
