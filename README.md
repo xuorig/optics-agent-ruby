@@ -59,7 +59,7 @@ end
 
 ## Rails
 
-The equivalent of the above for Rails is (I welcome better solutions!)
+The equivalent of the above for Rails is:
 
 Create an agent in `config/apllication.rb`, and register the rack middleware:
 
@@ -81,7 +81,7 @@ Register the Graphql middleware when you create your schema:
 Rails.application.config.optics_agent.instrument_schema(YourSchema)
 ```
 
-Add something like this to your `graphql` action:
+Register Optics Agent on the GraphQL context within your `graphql` action as below:
 
 ```ruby
 def create
