@@ -1,5 +1,9 @@
 # optics-agent-ruby
-Optics Agent for GraphQL Monitoring in Ruby
+Optics Agent for GraphQL Monitoring in Ruby.
+
+This is an alpha release, suitable for use in development contexts. There are still some outstanding improvements to make it ready for production contexts; see the [known limitations](#known-limitations) section below.
+
+[![CircleCI](https://circleci.com/gh/apollostack/optics-agent-ruby.svg?style=shield)](https://circleci.com/gh/apollostack/optics-agent-ruby)
 
 ## Installing
 
@@ -12,6 +16,12 @@ gem 'optics-agent'
 To your `Gemfile`
 
 ## Setup
+
+### API key
+
+You'll need to run your app with the `OPTICS_API_KEY` environment variable set to the name of your Apollo Optics service; at the moment Optics is in early access alpha--[get in touch](http://www.apollostack.com/optics) if you want to be part of our early access program.
+
+### Basic Rack/Sinatra
 
 Create an agent
 
@@ -46,7 +56,7 @@ post '/graphql' do
 end
 ```
 
-## Setup, Rails
+## Rails
 
 The equivalent of the above for Rails is (I welcome better solutions!)
 
@@ -88,8 +98,25 @@ end
 
 You can check out the GitHunt Rails API server example here: https://github.com/apollostack/githunt-api-rails
 
+## Known limitations
+
+Currently the agent is in alpha state; it is intended for early access use in development or basic (non-performance oriented) staging testing.
+
+We are working on resolving a [list of issues](https://github.com/apollostack/optics-agent-ruby/projects/1) to put together a production-ready beta launch. The headline issues as things stand are:
+
+- The agent is overly chatty and uses a naive threading mechanism that may lose reporting data when threads exit/etc.
+- Instrumentation timings may not be correct in all uses cases, and query times include the full rack request time.
+
+You can follow along with our [Beta Release Project](https://github.com/apollostack/optics-agent-ruby/projects/1), or even get in touch if you want to help out getting there!
 
 ## Development
+
+### Running tests
+
+```
+bundle install
+bundle exec rspec
+```
 
 ### Building protobuf definitions
 
