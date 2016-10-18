@@ -3,7 +3,7 @@ Optics Agent for GraphQL Monitoring in Ruby.
 
 This is an alpha release, suitable for use in development contexts. There are still some outstanding improvements to make it ready for production contexts; see the [known limitations](#known-limitations) section below.
 
-[![CircleCI](https://circleci.com/gh/apollostack/optics-agent-ruby.svg?style=shield)](https://circleci.com/gh/apollostack/optics-agent-ruby)
+[![Build Status](https://travis-ci.org/apollostack/optics-agent-ruby.svg?branch=master)](https://travis-ci.org/apollostack/optics-agent-ruby)
 
 ## Installing
 
