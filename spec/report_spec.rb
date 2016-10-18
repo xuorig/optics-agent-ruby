@@ -23,7 +23,7 @@ describe Report do
     query.report_field 'Person', 'firstName', 1, 1.1
     query.report_field 'Person', 'lastName', 1, 1.1
     query.report_field 'Query', 'person', 1, 1.22
-    query.document = DocumentMock.new('key')
+    query.document = DocumentMock.new('{field}')
 
     report = Report.new
     report.add_query query, {}, 1, 1.25
@@ -31,7 +31,7 @@ describe Report do
 
     expect(report.report).to be_an_instance_of(StatsReport)
     stats_report = report.report
-    expect(stats_report.per_signature.keys).to match_array(['key'])
+    expect(stats_report.per_signature.keys).to match_array(['{field}'])
 
     signature_stats = stats_report.per_signature.values.first
     expect(signature_stats.per_type.length).to equal(2)
@@ -52,13 +52,13 @@ describe Report do
     queryOne.report_field 'Person', 'firstName', 1, 1.1
     queryOne.report_field 'Person', 'lastName', 1, 1.1
     queryOne.report_field 'Query', 'person', 1, 1.22
-    queryOne.document = DocumentMock.new('key')
+    queryOne.document = DocumentMock.new('{field}')
 
     queryTwo = Query.new
     queryTwo.report_field 'Person', 'firstName', 1, 1.05
     queryTwo.report_field 'Person', 'lastName', 1, 1.05
     queryTwo.report_field 'Query', 'person', 1, 1.2
-    queryTwo.document = DocumentMock.new('key')
+    queryTwo.document = DocumentMock.new('{field}')
 
     report = Report.new
     report.add_query queryOne, {}, 1, 1.1
@@ -67,7 +67,7 @@ describe Report do
 
     expect(report.report).to be_an_instance_of(StatsReport)
     stats_report = report.report
-    expect(stats_report.per_signature.keys).to match_array(['key'])
+    expect(stats_report.per_signature.keys).to match_array(['{field}'])
 
     signature_stats = stats_report.per_signature.values.first
     expect(signature_stats.per_type.length).to equal(2)
@@ -88,13 +88,13 @@ describe Report do
     queryOne.report_field 'Person', 'firstName', 1, 1.1
     queryOne.report_field 'Person', 'lastName', 1, 1.1
     queryOne.report_field 'Query', 'person', 1, 1.22
-    queryOne.document = DocumentMock.new('keyOne')
+    queryOne.document = DocumentMock.new('{fieldOne}')
 
     queryTwo = Query.new
     queryTwo.report_field 'Person', 'firstName', 1, 1.05
     queryTwo.report_field 'Person', 'lastName', 1, 1.05
     queryTwo.report_field 'Query', 'person', 1, 1.02
-    queryTwo.document = DocumentMock.new('keyTwo')
+    queryTwo.document = DocumentMock.new('{fieldTwo}')
 
     report = Report.new
     report.add_query queryOne, {}, 1, 1.1
@@ -103,9 +103,9 @@ describe Report do
 
     expect(report.report).to be_an_instance_of(StatsReport)
     stats_report = report.report
-    expect(stats_report.per_signature.keys).to match_array(['keyOne', 'keyTwo'])
+    expect(stats_report.per_signature.keys).to match_array(['{fieldOne}', '{fieldTwo}'])
 
-    signature_stats = stats_report.per_signature['keyOne']
+    signature_stats = stats_report.per_signature['{fieldOne}']
     expect(signature_stats.per_type.length).to equal(2)
     expect(signature_stats.per_type.map &:name).to match_array(['Person', 'Query'])
 
@@ -123,7 +123,7 @@ describe Report do
     query = Query.new
     query.report_field 'Person', 'firstName', 1, 1.1
     query.report_field 'Person', 'age', 1, 1.1
-    query.document = DocumentMock.new('key')
+    query.document = DocumentMock.new('{field}')
 
     report = Report.new
     report.add_query query, {}, 1, 1.25
@@ -161,7 +161,7 @@ describe Report do
     query.report_field 'Query', '__schema', 1, 1.1
     query.report_field 'Query', '__typename', 1, 1.1
     query.report_field 'Query', '__type', 1, 1.1
-    query.document = DocumentMock.new('key')
+    query.document = DocumentMock.new('{field}')
 
     report = Report.new
     report.add_query query, {}, 1, 1.25

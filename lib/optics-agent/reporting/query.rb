@@ -1,6 +1,7 @@
 require 'apollo/optics/proto/reports_pb'
 require 'optics-agent/reporting/helpers'
 require 'optics-agent/normalization/latency'
+require 'optics-agent/normalization/query'
 
 module OpticsAgent::Reporting
   # This is a convenience class that enables us to fairly blindly
@@ -9,6 +10,7 @@ module OpticsAgent::Reporting
     include Apollo::Optics::Proto
     include OpticsAgent::Reporting
     include OpticsAgent::Normalization
+    include OpticsAgent::Normalization::Query
 
     attr_accessor :document
 
@@ -16,6 +18,7 @@ module OpticsAgent::Reporting
       @reports = []
 
       @document = nil
+      @signature
     end
 
     def signature
@@ -25,8 +28,7 @@ module OpticsAgent::Reporting
         throw "You must call .with_document on the optics context"
       end
 
-      # TODO: query normalization here
-      return document["query"].to_s
+      @signature ||= normalize(document["query"].to_s)
     end
 
     # we do nothing when reporting to minimize impact

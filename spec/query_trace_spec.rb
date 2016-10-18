@@ -23,7 +23,7 @@ describe QueryTrace do
     query.report_field 'Person', 'firstName', 1, 1.1
     query.report_field 'Person', 'lastName', 1, 1.1
     query.report_field 'Query', 'person', 1, 1.22
-    query.document = DocumentMock.new('key')
+    query.document = DocumentMock.new('{field}')
 
     trace = QueryTrace.new(query, {}, 1, 1.25)
 
