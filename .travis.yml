@@ -1,0 +1,8 @@
+deploy:
+  provider: rubygems
+  api_key:
+    secure: NyGvgW0S67mk9yDdSLFJs4POb1yLHm4a5ZCb2rN2hqSyJPEedcWPVsIRzCh2YcaYmjRQc5urVkwKMfOqBx4TGL51PBDOKhTkhmx7YXBaPeQ6xzq/2RidNtNl96FCIZsnzZHh206FAJKrw4JkoDcqIud6augpYseQxUG9vv2b26n0HZqVQc+veuzY3zwB6AureA2km8fr/yfmkOuguKUaq1DP6kgzypmeT29BeHZiD5+wJWgEqXlMcSh+XiKZtox+ZZL4BIfwSyCHk/3wkIaMt4f3iibCqRdeqNzfx9LDXD8vAF6NcKFVRzBLiJZ6ep9vSp6DUID5XbleQm2ejIIo9N5K/PgwHDGys4Ye94hWKhD/ZrdBN5olR/pOZ86QGzY3FW0LcerzxE6wtGz8zf7G+FUv8nCvs7ev4QwQR3+jHAcXoHEXMoDwCfELKUAfdkwX2lWQfuFKp6+iwx6nkPNkm8yPDXUFGJCug4vdPiFd2L+ScIT8L99aOiXOY4urBUn5+pQHuJj6Ml4sILa3SsqHueZdCNEFx5JJK87rqToRLcT0ARLlX3OycjlVxzlsFppC0kX6Qnw+dF5BpKzSGSlsv5feLDGspqmhYafIPQw9CMLqJfyU4Yp7knC/Xw4C2HqKKbKW/hW4vH3+yzly/N75FVaAN00sim4Wnd0eEWhVImQ=
+  gem: optics-agent
+  on:
+    tags: true
+    repo: apollostack/optics-agent-ruby
