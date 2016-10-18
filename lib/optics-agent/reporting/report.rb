@@ -20,20 +20,13 @@ module OpticsAgent::Reporting
         header: ReportHeader.new({
           agent_version: '1'
         }),
-        start_time: Timestamp.new({
-          # XXX pass this in?
-          seconds: Time.now.to_i,
-          nanos: 0
-        })
+        start_time: generate_timestamp(Time.now)
       })
     end
 
     def finish!
-      @report.end_time ||= Timestamp.new({
-        # XXX pass this in?
-        seconds: Time.now.to_i,
-        nanos: 0
-      })
+      @report.end_time ||= generate_timestamp(Time.now)
+      @report.realtime_duration || duration_nanos(@report.start_time, @report.end_time)
     end
 
     def send

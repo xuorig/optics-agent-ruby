@@ -19,6 +19,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :server_id, :message, 1, "apollo.optics.proto.Id128"
     optional :client_id, :message, 2, "apollo.optics.proto.Id128"
     optional :start_time, :message, 4, "apollo.optics.proto.Timestamp"
+    optional :end_time, :message, 3, "apollo.optics.proto.Timestamp"
+    optional :duration_ns, :uint64, 11
     optional :signature, :string, 5
     optional :details, :message, 6, "apollo.optics.proto.Trace.Details"
     optional :client_name, :string, 7

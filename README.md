@@ -136,5 +136,5 @@ bundle install
 Compile the `.proto` definitions with
 
 ```bash
-bundle exec rake proto:compile
+bundle exec rake protobuf:compile
 ```

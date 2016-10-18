@@ -15,6 +15,11 @@ module OpticsAgent::Reporting
     });
   end
 
+  def duration_nanos(start_time, end_time)
+    throw "start_time before end_time" if (start_time > end_time)
+    ((end_time - start_time) * 1e9).to_i
+  end
+
   # XXX: implement
   def client_info(rack_env)
     {
