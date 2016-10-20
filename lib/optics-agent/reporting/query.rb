@@ -28,7 +28,7 @@ module OpticsAgent::Reporting
         throw "You must call .with_document on the optics context"
       end
 
-      @signature ||= normalize(document["query"].to_s)
+      @signature ||= normalize(document)
     end
 
     # we do nothing when reporting to minimize impact

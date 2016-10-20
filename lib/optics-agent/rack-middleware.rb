@@ -11,19 +11,8 @@ module OpticsAgent
       begin
         start_time = Time.now
 
-        # XXX: figure out a way to pass this in here
-        agent = OpticsAgent::Agent.instance
-        query = OpticsAgent::Reporting::Query.new
-
         # Attach so resolver middleware can access
-        env[:optics_agent] = {
-          agent: agent,
-          query: query
-        }
-        env[:optics_agent].define_singleton_method(:with_document) do |document|
-          self[:query].document = document
-          self
-        end
+        env[:optics_agent] = OpticsAgent::Transaction.new
 
         result = @app.call(env)
 
